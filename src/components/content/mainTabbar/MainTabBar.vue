@@ -1,5 +1,5 @@
 <template>
-  <tab-bar>
+  <tab-bar class="tab-bar">
     <!--   activeColor 设置该组件活跃时的颜色，默认为红色  -->
     <tab-bar-item path="/home" activeColor="red">
       <img slot="item-icon" src="~@/assets/img/tabbar/home.svg">
@@ -39,5 +39,7 @@
 </script>
 
 <style scoped>
-
+  .tab-bar {
+    z-index: 9;
+  }
 </style>

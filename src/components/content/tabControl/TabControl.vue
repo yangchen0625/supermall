@@ -29,6 +29,8 @@ export default {
     //把当前点击的index赋给currentIndex
     itemClick(index) {
       this.currentIndex = index;
+      // 子传父，把点击事件传到外面（自定义事件）
+      this.$emit('tabClick', index)
     }
   }
 }

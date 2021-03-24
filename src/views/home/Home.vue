@@ -10,9 +10,13 @@
     <recommend-view :recommends="recommends"></recommend-view>
     <!--  热卖信息  -->
     <feature-view></feature-view>
-    <tab-control class="tab-control" :titles="['流行','新款','精选']"></tab-control>
+    <tab-control class="tab-control"
+                 :titles="['流行','新款','精选']"
+                 @tabClick="tabClick">
+    <!--  @tabClick 监听TabControl里的自定义事件。相当于 v-on:tabClick   -->
+    </tab-control>
     <!--  商品信息  -->
-    <goods-list :goods="goods['pop'].list"></goods-list>
+    <goods-list :goods="showGoods"></goods-list>
     <ui>
       <li>123</li>
       <li>123</li>
@@ -93,7 +97,8 @@
           'pop': {page: 0, list: []},
           'new': {page: 0, list: []},
           'sell': {page: 0, list: []},
-        }
+        },
+        currentType: 'pop' // 默认为pop
       }
     },
     // 使用生命周期函数，等首页组件创建完后，发送网络请求
@@ -106,7 +111,34 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
+    computed: {
+      // 点击不同商品类别，显示不同商品信息
+      showGoods() {
+        return this.goods[this.currentType].list
+      }
+    },
     methods: {
+      /**
+       * 事件监听相关的方法
+      */
+      tabClick(index) {
+        // console.log(index);
+        switch (index) {
+          case 0:
+            this.currentType = 'pop'
+            break
+          case 1:
+            this.currentType = 'new'
+            break
+          case 2:
+            this.currentType = 'sell'
+            break
+        }
+      },
+
+      /**
+       * 网络请求相关的方法
+       */
       getHomeMultidata() {
         getHomeMultidata().then(res => {
           // 将请求的数据赋给data里定义好的result变量（若不赋值，res的内容会被回收）
