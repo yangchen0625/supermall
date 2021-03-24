@@ -17,6 +17,9 @@
     </tab-control>
     <!--  商品信息  -->
     <goods-list :goods="showGoods"></goods-list>
+
+    <!--  返回顶部按钮  -->
+    <back-top></back-top>
     <ui>
       <li>123</li>
       <li>123</li>
@@ -72,6 +75,7 @@
   import TabControl from "@/components/content/tabControl/TabControl";
   import GoodsList from "@/components/content/goods/GoodsList";
   import GoodsListItem from "@/components/content/goods/GoodsListItem";
+  import BackTop from "@/components/content/backTop/BackTop";
 
   import {getHomeMultidata, getHomeGoods} from "@/network/home"; //没有default导出，就需要{}引入
 
@@ -84,7 +88,8 @@
       FeatureView,
       TabControl,
       GoodsList,
-      GoodsListItem
+      GoodsListItem,
+      BackTop
     },
     // 将网络请求拿到的数据res保存起来
     // 可以去浏览器中Vue Devtools插件查看data里的result是否真正保存了数据
