@@ -1,4 +1,5 @@
 <template>
+<!-- 流行，新款，精选 -->
   <div class="tab-control">
     <div v-for="(item, index) in titles" class="tab-control-item"
          :class="{active: index === currentIndex}"

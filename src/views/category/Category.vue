@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper">
     <ul class="content" >
+      <!--  无论是否设置click:false,button都可以点击    -->
+      <button @click="btnClick">按钮</button>
+      <!--  必须设置click:true，那么div才能监听点击    -->
+      <div @click="divClick">一个div</div>
       <li>分类列表1</li>
       <li>分类列表2</li>
       <li>分类列表3</li>
@@ -320,8 +324,26 @@
     mounted() {
       // console.log(document.querySelector('.wrapper'));
       this.scroll = new BScroll(document.querySelector('.wrapper'), {
-
+        probeType: 3,  // 实时监听scroll事件
+        pullUpLoad: true,
+        click: true
       })
+      // 打印当前位置
+      this.scroll.on('scroll',(position) => {
+        console.log(position)
+      })
+
+      this.scroll.on('pullingUp',() => {
+        console.log('上拉加载更多');
+      })
+    },
+    methods: {
+      btnClick() {
+        console.log('btnClick');
+      },
+      divClick() {
+        console.log('divClick');
+      }
     }
   }
 </script>
