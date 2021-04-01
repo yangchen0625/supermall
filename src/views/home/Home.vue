@@ -6,7 +6,12 @@
     <!--  使用better-scroll实现滚动  -->
     <!-- probe-type="3" 表示实时监听
          @scroll表示拿到Scroll里的自定义事件，监听滚动的位置-->
-    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+    <scroll class="content"
+            ref="scroll"
+            :probe-type="3"
+            @scroll="contentScroll"
+            :pull-up-load="true"
+            @pullingUp="loadMore">
       <!-- 轮播图 -->
       <home-swiper :banners="banners"></home-swiper>
       <!--  推荐信息  -->
@@ -124,6 +129,11 @@
       contentScroll(position) {
         this.isShowBackTop = (-position.y) > 1000
       },
+      // 自定义事件，上拉加载更多
+      loadMore() {
+        // console.log('上拉加载更多');
+        this.getHomeGoods(this.currentType)
+      },
 
       /**
        * 网络请求相关的方法
@@ -147,6 +157,8 @@
           this.goods[type].list.push(...res.data.list)
           // 每次该类型（type）多一种数据，page + 1
           this.goods[type].page += 1
+          // 在把数据加载完后，使用BScroll里的finishPullUp方法，才能进行下一次加载（这里finishPullUp方法已经在Scroll组件里封装好）
+          this.$refs.scroll.finishPullUp()
         })
       }
     }

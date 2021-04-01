@@ -16,6 +16,11 @@
       probeType: {
         type: Number,
         default: 0
+      },
+      // BSrcoll的 上拉加载更多 选项
+      pullUpLoad: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -28,13 +33,20 @@
       // 不推荐使用document方式拿属性。推荐使用ref，在相应的元素上添加 ref="wrapper"
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: true, //设置为true，里面的div才能监听点击
-        probeType: this.probeType
+        probeType: this.probeType,
+        pullUpLoad: this.pullUpLoad
       })
       // 2.监听滚动的位置
       this.scroll.on('scroll', (position) => {
         // console.log(position);
         // 发出一个自定义事件，谁想用就可以直接使用
         this.$emit('scroll', position)
+      })
+      //3.监听上拉事件
+      this.scroll.on('pullingUp',() => {
+        // console.log('上拉加载更多');
+        // 将上拉加载更多事件传出去，告诉别的组件做（上拉加载更多）动作
+        this.$emit('pullingUp')
       })
     },
     methods: {
@@ -47,6 +59,10 @@
        */
       scrollTo(x, y, time = 500) {
         this.scroll.scrollTo(x, y, time)
+      },
+      finishPullUp() {
+        // BScroll原生方法 finishPullUp
+        this.scroll.finishPullUp()
       }
     }
   }
