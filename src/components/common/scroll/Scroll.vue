@@ -18,10 +18,10 @@
         default: 0
       },
       // BSrcoll的 上拉加载更多 选项
-      pullUpLoad: {
-        type: Boolean,
-        default: false
-      }
+      // pullUpLoad: {
+      //   type: Boolean,
+      //   default: false
+      // }
     },
     data() {
       return {
@@ -42,12 +42,13 @@
         // 发出一个自定义事件，谁想用就可以直接使用
         this.$emit('scroll', position)
       })
+
       //3.监听上拉事件
-      this.scroll.on('pullingUp',() => {
-        // console.log('上拉加载更多');
-        // 将上拉加载更多事件传出去，告诉别的组件做（上拉加载更多）动作
-        this.$emit('pullingUp')
-      })
+      // this.scroll.on('pullingUp',() => {
+      //   // console.log('上拉加载更多');
+      //   // 将上拉加载更多事件传出去，告诉别的组件做（上拉加载更多）动作
+      //   this.$emit('pullingUp')
+      // })
     },
     methods: {
       /**
@@ -57,12 +58,18 @@
        * @param y
        * @param time
        */
-      scrollTo(x, y, time = 500) {
+        scrollTo(x, y, time = 500) {
         this.scroll.scrollTo(x, y, time)
       },
       finishPullUp() {
-        // BScroll原生方法 finishPullUp
+        // BScroll原生方法 finishPullUp 完成上拉加载
         this.scroll.finishPullUp()
+      },
+      refresh() {
+        // BScroll原生方法 refresh，刷新界面
+        // 增加一个判断，防止refresh()找不到报错
+        // console.log('---');
+        this.scroll && this.scroll.refresh()
       }
     }
   }

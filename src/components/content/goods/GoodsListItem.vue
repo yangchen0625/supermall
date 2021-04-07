@@ -1,6 +1,7 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img">
+    <!--  @load 是在vue里通过load函数可以监听图片加载完成  -->
+    <img :src="goodsItem.show.img" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -18,6 +19,19 @@
         default() {
           return {}
         }
+      }
+    },
+    methods: {
+      // 监听图片加载完成
+      imageLoad() {
+        // console.log('imageLoad');
+        /**
+         * $bus 事件总线。
+         * 类似Vuex，
+         * Vuex是状态管理，事件总线是事件管理
+         * emit 发射出一个事件，然后在别的地方使用 on 接收
+         */
+        this.$bus.$emit('itemImageLoad')
       }
     }
   }
