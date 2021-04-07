@@ -2,7 +2,12 @@
   <div id="home">
     <!-- 导航栏   -->
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-
+    <tab-control ref="tabControl1"
+                 :titles="['流行','新款','精选']"
+                 @tabClick="tabClick"
+                 class="tab-control"
+                 v-show="isTabFixed">
+    </tab-control>
     <!--  使用better-scroll实现滚动  -->
     <!-- probe-type="3" 表示实时监听
          @scroll表示拿到Scroll里的自定义事件，监听滚动的位置-->
@@ -13,14 +18,14 @@
             :pull-up-load="true"
             @pullingUp="loadMore">
       <!-- 轮播图 -->
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"></home-swiper>
       <!--  推荐信息  -->
       <recommend-view :recommends="recommends"></recommend-view>
       <!--  热卖信息  -->
       <feature-view></feature-view>
       <!--    流行，新款，精选    -->
       <!--  @tabClick 监听TabControl里的自定义事件。相当于 v-on:tabClick   -->
-      <tab-control class="tab-control"
+      <tab-control ref="tabControl2"
                    :titles="['流行','新款','精选']"
                    @tabClick="tabClick">
       </tab-control>
@@ -79,7 +84,9 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop', // 默认为pop
-        isShowBackTop: false //判断返回顶部按钮的显示与隐藏
+        isShowBackTop: false, //判断返回顶部按钮的显示与隐藏
+        tabOffsetTop: 0, //获取当前元素（tabControl）定位的父元素位置
+        isTabFixed: false //判断tabControl是否吸顶
       }
     },
     // 使用生命周期函数，等首页组件创建完后，发送网络请求
@@ -93,6 +100,7 @@
       this.getHomeGoods('sell')
     },
     mounted() {
+      // 1.图片加载完成的事件监听
       // 使用 utils.js中的debounce函数
       const refresh = debounce(this.$refs.scroll.refresh, 100)
       // 监听GoodListItem中发射到事件总线中的 图片加载完成 事件
@@ -126,6 +134,9 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl1.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
+
       },
       // 返回顶部，组件监听方法
       backClick() {
@@ -139,13 +150,22 @@
       },
       // 自定义事件，监听滚动的位置
       contentScroll(position) {
+        // 1.判断BackTop的隐藏显示
         this.isShowBackTop = (-position.y) > 1000
+        // 2.决定tabControl是否吸顶（position: fixed），如果上滑距离大于tabOffsetTop，则吸顶
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       // 自定义事件，上拉加载更多
       loadMore() {
         // console.log('上拉加载更多');
         this.getHomeGoods(this.currentType)
         this.$refs.scroll.scroll.refresh()
+      },
+      // HomeSwiper.vue中image绑定的load方法，发射一个自定义事件swiperImageLoad给Home使用，判断轮播图加载完成
+      // 拿到正确的 tabOffsetTop
+      swiperImageLoad() {
+        // console.log(this.$refs.tabControl.$el.offsetTop);
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
       },
       /**
        * 网络请求相关的方法
@@ -179,25 +199,31 @@
 
 <style scoped>
   #home {
-    padding-top: 44px;
+    /*padding-top: 44px;*/
     height: 100vh;
+    position: relative;
   }
 
   .home-nav {
     background-color: var(--color-tint);
     color: white;
-
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;
+    /* 在使用浏览器原生滚动时，为了让导航不跟随一起滚动 */
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*top: 0;*/
+    /*z-index: 9;*/
   }
 
+  /*.tab-control {*/
+  /*  position: sticky;*/
+  /*  top: 44px;*/
+  /*  z-index: 9;*/
+  /*}*/
+
   .tab-control {
-    position: sticky;
-    top: 44px;
-    z-index: 9;
+    position: relative;
+    z-index: 9;  /* z-index只对定位的元素起效果 */
   }
 
   .content {
