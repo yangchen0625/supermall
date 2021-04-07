@@ -10,8 +10,8 @@
             ref="scroll"
             :probe-type="3"
             @scroll="contentScroll"
-            :pull-up-load="true">
-<!--            @pullingUp="loadMore">-->
+            :pull-up-load="true"
+            @pullingUp="loadMore">
       <!-- 轮播图 -->
       <home-swiper :banners="banners"></home-swiper>
       <!--  推荐信息  -->
@@ -50,8 +50,8 @@
 
   import Scroll from "@/components/common/scroll/Scroll";
 
-  import {getHomeMultidata, getHomeGoods} from "@/network/home"; //没有default导出，就需要{}引入
-
+  import { getHomeMultidata, getHomeGoods } from "@/network/home"; //没有default导出，就需要{}引入
+  import { debounce } from "@/common/utils";
 
   export default {
     name: "Home",
@@ -93,7 +93,8 @@
       this.getHomeGoods('sell')
     },
     mounted() {
-      const refresh = this.debounce(this.$refs.scroll.refresh, 100)
+      // 使用 utils.js中的debounce函数
+      const refresh = debounce(this.$refs.scroll.refresh, 100)
       // 监听GoodListItem中发射到事件总线中的 图片加载完成 事件
       this.$bus.$on('itemImageLoad', () => {
         // 调用Scroll.vue中的refresh()方法
@@ -111,18 +112,6 @@
       /**
        * 事件监听相关的方法
       */
-      // 防抖动函数
-      debounce(func, delay) {
-        let timer = null
-        return function(...args) {
-          if (timer) {
-            clearTimeout(timer)
-          }
-          timer = setTimeout(() => {
-            func.apply(this, args)
-          }, delay)
-        }
-      },
       // TableControl.vue中发出的自定义事件
       tabClick(index) {
         // console.log(index);
@@ -153,11 +142,11 @@
         this.isShowBackTop = (-position.y) > 1000
       },
       // 自定义事件，上拉加载更多
-      // loadMore() {
-      //   // console.log('上拉加载更多');
-      //   this.getHomeGoods(this.currentType)
-      //   this.$refs.scroll.scroll.refresh()
-      // },
+      loadMore() {
+        // console.log('上拉加载更多');
+        this.getHomeGoods(this.currentType)
+        this.$refs.scroll.scroll.refresh()
+      },
       /**
        * 网络请求相关的方法
        */
@@ -181,7 +170,7 @@
           // 每次该类型（type）多一种数据，page + 1
           this.goods[type].page += 1
           // 在把数据加载完后，使用BScroll里的finishPullUp方法，才能进行下一次加载（这里finishPullUp方法已经在Scroll组件里封装好）
-          // this.$refs.scroll.finishPullUp()
+          this.$refs.scroll.finishPullUp()
         })
       }
     }
