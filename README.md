@@ -134,3 +134,15 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     · 当用户滚动到一定位置，PlaceHolderTabControl显示出来
     · 当用户滚动没有达到一定位置时，PlaceHolderTabControl隐藏
 ```
+
+### 让Home保持原来的状态
+```
+1.让Home不要随意销毁
+  · keep-alive
+2.让Home中的的内容保持原来的位置
+  · 离开时，保持一个位置信息saveY
+  · 进来时，将位置设置为原来保存的位置信息即可
+    # 注意：最好回来时进行一次refresh()
+```
+
+

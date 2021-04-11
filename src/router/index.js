@@ -6,6 +6,7 @@ const Home = () => import('../views/home/Home')
 const Category = () => import('../views/category/Category')
 const Cart = () => import('../views/cart/Cart')
 const Profile = () => import('../views/profile/Profile')
+const Detail = () => import('../views/detail/Detail')
 
 //1.安装插件
 Vue.use(VueRouter)
@@ -36,6 +37,11 @@ const routes = [
     path: '/profile',
     name: '个人',
     component: Profile
+  },
+  {
+    path: '/detail/:iid', // 动态路由，进到详情页面时拿到该商品iid
+    name: '详情',
+    component: Detail
   }
 ]
 

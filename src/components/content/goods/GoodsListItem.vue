@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <!--  @load 是在vue里通过load函数可以监听图片加载完成  -->
     <img :src="goodsItem.show.img" @load="imageLoad">
     <div class="goods-info">
@@ -32,6 +32,17 @@
          * emit 发射出一个事件，然后在别的地方使用 on 接收
          */
         this.$bus.$emit('itemImageLoad')
+      },
+      // 监听每个商品的点击事件，跳转到详情页
+      itemClick() {
+        // console.log('跳转到详情页');
+        /**
+         *  使用push路由跳转，因为有返回上一页功能
+         *  使用动态路由，/detail/:iid。
+         *  在点击该商品时拿到此商品iid
+         */
+        this.$router.push('/detail/' + this.goodsItem.iid)
+
       }
     }
   }

@@ -86,7 +86,8 @@
         currentType: 'pop', // 默认为pop
         isShowBackTop: false, //判断返回顶部按钮的显示与隐藏
         tabOffsetTop: 0, //获取当前元素（tabControl）定位的父元素位置
-        isTabFixed: false //判断tabControl是否吸顶
+        isTabFixed: false, //判断tabControl是否吸顶
+        saveY: 0 //离开组件时记录此时Y值
       }
     },
     // 使用生命周期函数，等首页组件创建完后，发送网络请求
@@ -99,7 +100,7 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
-    mounted() {
+    mounted()   {
       // 1.图片加载完成的事件监听
       // 使用 utils.js中的debounce函数
       const refresh = debounce(this.$refs.scroll.refresh, 100)
@@ -109,6 +110,19 @@
         // this.$refs.scroll && this.$refs.scroll.refresh()
         refresh()
       })
+    },
+    destroyed() {
+      console.log('homedestroy');
+    },
+    // 进组件时调用
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+      this.$refs.scroll.refresh()
+    },
+    // 离开组件时调用
+    deactivated() {
+      // 将此时界面的y值赋给saveY
+      this.saveY = this.$refs.scroll.scroll.y
     },
     computed: {
       // 点击不同商品类别，显示不同商品信息
