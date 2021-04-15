@@ -1,4 +1,5 @@
 <template>
+<!-- 详情页轮播图组件 -->
   <swiper class="detail-swiper">
     <swiper-item v-for="item in topImages">
       <img :src="item">
