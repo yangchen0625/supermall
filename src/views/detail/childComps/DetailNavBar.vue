@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav-bar>
+    <nav-bar class="nav-bar">
       <div slot="left" class="back" @click="backClick">
         <img src="~assets/img/common/back.svg">
       </div>
@@ -43,6 +43,12 @@
 </script>
 
 <style scoped>
+  .nav-bar {
+    position: relative;
+    z-index: 9;
+    background-color: #ffffff;
+  }
+
   .title {
     display: flex;
     font-size: 13px;
